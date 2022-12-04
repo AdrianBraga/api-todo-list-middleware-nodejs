@@ -22,8 +22,15 @@ function checksExistsUserAccount(request, response, next) {
 };
 
 function checksCreateTodosUserAvailability(request, response, next) {
-  // Complete aqui
-}
+  const { user } = request;
+
+  if (user.todos.length === 10 && user.pro === false) {
+    return response.status(403).json({ message: 'Voce ja atingiu 10 todos, exclua algum ou atualize seu plano para o PRO' })
+  }
+
+  if ((user.todos.length <= 10 && user.pro === false) || user.pro == true) 
+  return next();
+};
 
 function checksTodoExists(request, response, next) {
   // Complete aqui
