@@ -33,8 +33,26 @@ function checksCreateTodosUserAvailability(request, response, next) {
 };
 
 function checksTodoExists(request, response, next) {
-  // Complete aqui
-}
+  const { username } = request.headers;
+  const { id } = request.params;
+
+  if(!validate(id)) return response.status(400).json({ message: 'Id Invalido' });
+
+  const user = users.find(user => user.username === username);
+
+  if(!user) return response.status(404).json({ message: 'Usuario nao encontrado!' });
+
+  const todo = user.todos.find(todo => todo.id === id);
+
+  if (!todo) {
+    return response.status(404).json({ error: 'Todo not found' });
+  }
+
+  request.user = user;
+  request.todo = todo;
+
+  return next();
+};
 
 function findUserById(request, response, next) {
   const { id } = request.params;
